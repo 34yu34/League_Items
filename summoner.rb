@@ -1,3 +1,5 @@
+require_relative 'utils'
+
 class Summoner
   attr_accessor :summoner_id,:account_id, :name, :tier, :dision, :league_points
 
@@ -5,8 +7,8 @@ class Summoner
     @summoner_id = options[:summoner_id]
     @account_id = options[:account_id]
     @name = options[:name]
-    @tier = get_tier_level(options[:tier])
-    @division = get_rank_level(options[:division])
+    @tier = Utils.get_tier_level(options[:tier])
+    @division = Utils.get_rank_level(options[:division])
     @league_points = options[:lp]
   end
 
