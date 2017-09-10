@@ -3,9 +3,10 @@ require 'json'
 require 'irb'
 
 class Summoner
-  attr_accessor :name, :tier, :dision, :league_points
+  attr_accessor :id, :name, :tier, :dision, :league_points
 
   def initialize(options)
+    @id = options[:id]
     @name = options[:name]
     @tier = get_tier_level(options[:tier])
     @division = get_rank_level(options[:division])
@@ -64,6 +65,7 @@ def get_summoner_rank(summonerId)
     .first
 
   Summoner.new(
+    id: summonerId,
     name: league_rank['playerOrTeamName'],
     tier: league_rank['tier'],
     division: league_rank['rank'],
