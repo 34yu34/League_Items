@@ -59,7 +59,7 @@ def get_rank_level(rank)
   ].index(rank.upcase) + 1
 end
 
-def get_summoner_rank(summonerId)
+def get_summoner(summonerId)
   league_rank = JSON.parse(get(create_request("lol/league/v3/positions/by-summoner/#{summonerId}")))
     .select { |x| x['queueType'] == 'RANKED_SOLO_5x5' }
     .first
