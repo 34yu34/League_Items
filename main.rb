@@ -16,18 +16,17 @@ class Summoner
   def <=>(other)
     if @tier == other.tier
       if @division == other.rank
-        return @league_points <=> other.league_points
+        @league_points <=> other.league_points
       else
-        return @rank <=> other.rank
+        @rank <=> other.rank
       end
     else
-      return @tier <=> other.tier
+      @tier <=> other.tier
     end
   end
 end
 
-
-KEY = "YOUR_KEY_HERE"
+KEY = 'YOUR_KEY_HERE'.freeze
 
 def create_request(request)
   URI("https://na1.api.riotgames.com/#{request}?api_key=#{KEY}")
@@ -38,31 +37,31 @@ def get(uri)
 end
 
 def get_tier_level(tier)
-  [
-    'BRONZE',
-    'SILVER',
-    'GOLD',
-    'PLATINUM',
-    'DIAMOND',
-    'MASTER',
-    'CHALLENGER'
-  ].index(tier.upcase)
+  %w(
+    BRONZE
+    SILVER
+    GOLD
+    PLATINUM
+    DIAMOND
+    MASTER
+    CHALLENGER
+  ).index(tier.upcase)
 end
 
 def get_rank_level(rank)
-  [
-    "I",
-    "II",
-    "III",
-    "IV",
-    "V",
-  ].index(rank.upcase) + 1
+  %w(
+    I
+    II
+    III
+    IV
+    V
+  ).index(rank.upcase) + 1
 end
 
 def get_summoner(summonerId)
   league_rank = JSON.parse(get(create_request("lol/league/v3/positions/by-summoner/#{summonerId}")))
-    .select { |x| x['queueType'] == 'RANKED_SOLO_5x5' }
-    .first
+                    .select { |x| x['queueType'] == 'RANKED_SOLO_5x5' }
+                    .first
 
   Summoner.new(
     id: summonerId,
