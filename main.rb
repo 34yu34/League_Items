@@ -1,4 +1,13 @@
-require "net/http"
-key = "YOUR_KEY_HERE"
+require 'net/http'
+require 'json'
+require 'irb'
 
-uri = Uri.new("https://na1.api.riotgames.com/lol/summoner/v3/summoners/by-name/RiotSchmick?api_key=#{key}" )
+KEY = "YOUR_KEY_HERE"
+
+def create_request(request)
+  URI("https://na1.api.riotgames.com/#{request}")
+end
+
+def get(uri)
+  Net::HTTP.get(uri)
+end
