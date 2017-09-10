@@ -13,15 +13,15 @@ def get(uri)
 end
 
 def get_tier_level(tier)
-  {
-    'BRONZE' => 0,
-    'SILVER' => 1,
-    'GOLD' => 2,
-    'PLATINUM' => 3,
-    'DIAMOND' => 4,
-    'MASTER' => 5,
-    'CHALLENGER' => 6
-  }[tier.upcase]
+  [
+    'BRONZE',
+    'SILVER',
+    'GOLD',
+    'PLATINUM',
+    'DIAMOND',
+    'MASTER',
+    'CHALLENGER'
+  ].index(tier.upcase)
 end
 
 def get_rank_level(rank)
