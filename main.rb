@@ -11,3 +11,15 @@ end
 def get(uri)
   Net::HTTP.get(uri)
 end
+
+def get_tier_level(tier)
+  {
+    'BRONZE' => 0,
+    'SILVER' => 1,
+    'GOLD' => 2,
+    'PLATINUM' => 3,
+    'DIAMOND' => 4,
+    'MASTER' => 5,
+    'CHALLENGER' => 6
+  }[tier.upcase]
+end
