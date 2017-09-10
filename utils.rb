@@ -5,8 +5,7 @@ module Utils
   end
 
   def self.get(uri)
-    result = Net::HTTP.get(uri)
-    parsed_result = JSON.parse(result)
+    Net::HTTP.get(uri)
   end
 
   def self.get_tier_level(tier)
@@ -35,10 +34,9 @@ module Utils
     league_rank = JSON.parse(get(create_request("lol/league/v3/positions/by-summoner/#{summoner_id}")))
                       .select { |x| x['queueType'] == 'RANKED_SOLO_5x5' }
                       .first
-
     Summoner.new(
       summoner_id: summoner_id,
-      account_id: league_rank['accountId'],
+      account_id: league_rank['playerOrTeamId'],
       name: league_rank['playerOrTeamName'],
       tier: league_rank['tier'],
       division: league_rank['rank'],
