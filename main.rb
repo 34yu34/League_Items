@@ -42,7 +42,8 @@ def get_summoner(summoner_id)
                     .first
 
   Summoner.new(
-    id: summonerId,
+    summoner_id: summoner_id,
+    account_id: league_rank['accountId'],
     name: league_rank['playerOrTeamName'],
     tier: league_rank['tier'],
     division: league_rank['rank'],
