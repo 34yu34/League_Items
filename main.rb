@@ -5,7 +5,7 @@ require 'irb'
 KEY = "YOUR_KEY_HERE"
 
 def create_request(request)
-  URI("https://na1.api.riotgames.com/#{request}")
+  URI("https://na1.api.riotgames.com/#{request}?api_key=#{KEY}")
 end
 
 def get(uri)
