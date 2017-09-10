@@ -1,3 +1,6 @@
+require_relative 'summoner'
+require_relative 'match'
+
 module Utils
   def self.create_request(request, params = [])
     params << "api_key=#{KEY}"
@@ -5,7 +8,16 @@ module Utils
   end
 
   def self.get(uri)
-    Net::HTTP.get(uri)
+    result = JSON.parse(Net::HTTP.get(uri))
+    # TODO: Rework this function
+    while Hash === result && result['status']
+      puts 'Request did not work.'
+      puts result
+      sleep(1)
+      result = JSON.parse(Net::HTTP.get(uri))
+    end
+
+    result
   end
 
   def self.get_tier_level(tier)
@@ -30,13 +42,14 @@ module Utils
     ).index(rank.upcase) + 1
   end
 
-  def self.get_summoner(summoner_id)
-    league_rank = JSON.parse(get(create_request("lol/league/v3/positions/by-summoner/#{summoner_id}")))
+  def self.get_summoner(summoner_id, account_id = nil)
+    league_rank = get(create_request("lol/league/v3/positions/by-summoner/#{summoner_id}"))
                       .select { |x| x['queueType'] == 'RANKED_SOLO_5x5' }
                       .first
+    nil unless league_rank
     Summoner.new(
       summoner_id: summoner_id,
-      account_id: league_rank['playerOrTeamId'],
+      account_id: account_id,
       name: league_rank['playerOrTeamName'],
       tier: league_rank['tier'],
       division: league_rank['rank'],
@@ -46,9 +59,9 @@ module Utils
 
   def self.get_ranked_match(summoner)
     matchlist = []
-    match_history = JSON.parse(get(create_request("/lol/match/v3/matchlists/by-account/#{summoner.account_id}", ['queue=420'])))["matches"]
+    match_history = get(create_request("/lol/match/v3/matchlists/by-account/#{summoner.account_id}", ['queue=420']))["matches"]
       .each do |m|
-          match = JSON.parse(get(create_request("/lol/match/v3/matches/#{match[gameId]}")))
+          match = get(create_request("/lol/match/v3/matches/#{m['gameId']}"))
           matchlist << Match.new(
             game_id: match['gameId'],
             game_version: match['gameVersion'],

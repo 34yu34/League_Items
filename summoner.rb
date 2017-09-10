@@ -12,6 +12,17 @@ class Summoner
     @league_points = options[:lp]
   end
 
+  def account_id
+    unless @account_id
+      @account_id =
+        Utils.get(
+          Utils.create_request("/lol/summoner/v3/summoners/#{@summoner_id}")
+        )['accountId']
+    end
+
+    @account_id
+  end
+
   def <=>(other)
     if @tier == other.tier
       if @division == other.rank
