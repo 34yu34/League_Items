@@ -23,3 +23,13 @@ def get_tier_level(tier)
     'CHALLENGER' => 6
   }[tier.upcase]
 end
+
+def get_rank_level(rank)
+  [
+    "I",
+    "II",
+    "III",
+    "IV",
+    "V",
+  ].index(rank.upcase) + 1
+end
