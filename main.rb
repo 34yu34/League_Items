@@ -6,8 +6,9 @@ require_relative 'summoner'
 
 KEY = 'YOUR_KEY_HERE'.freeze
 
-def create_request(request)
-  URI("https://na1.api.riotgames.com/#{request}?api_key=#{KEY}")
+def create_request(request, params = [])
+  params << "api_key=#{KEY}"
+  URI("https://na1.api.riotgames.com/#{request}?#{params * '&'}")
 end
 
 def get(uri)
