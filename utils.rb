@@ -44,4 +44,17 @@ module Utils
       lp: league_rank['leaguePoints']
     )
   end
+
+  def get_ranked_match(summoner)
+    matchlist = []
+    match_history = JSON.parse(get(create_request("/lol/match/v3/matchlists/by-account/#{summoner.account_id}", ['queue=420'])))["matches"]
+      .each do |m|
+          match = JSON.parse(get(create_request("/lol/match/v3/matches/#{match[gameId]}")))
+          matchlist << Match.new(
+            game_id: match['gameId'],
+            game_version: match['gameVersion'],
+            summoners: match['participantIdentities']
+          )
+      end
+  end
 end
