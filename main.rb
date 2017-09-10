@@ -11,6 +11,18 @@ class Summoner
     @division = get_rank_level(options[:division])
     @league_points = options[:lp]
   end
+
+  def <=>(other)
+    if @tier == other.tier
+      if @division == other.rank
+        return @league_points <=> other.league_points
+      else
+        return @rank <=> other.rank
+      end
+    else
+      return @tier <=> other.tier
+    end
+  end
 end
 
 
