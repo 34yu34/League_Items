@@ -1,14 +1,15 @@
 module Utils
-  def create_request(request, params = [])
+  def self.create_request(request, params = [])
     params << "api_key=#{KEY}"
     URI("https://na1.api.riotgames.com/#{request}?#{params * '&'}")
   end
 
-  def get(uri)
-    Net::HTTP.get(uri)
+  def self.get(uri)
+    result = Net::HTTP.get(uri)
+    parsed_result = JSON.parse(result)
   end
 
-  def get_tier_level(tier)
+  def self.get_tier_level(tier)
     %w(
       BRONZE
       SILVER
@@ -20,7 +21,7 @@ module Utils
     ).index(tier.upcase)
   end
 
-  def get_rank_level(rank)
+  def self.get_rank_level(rank)
     %w(
       I
       II
@@ -30,7 +31,7 @@ module Utils
     ).index(rank.upcase) + 1
   end
 
-  def get_summoner(summoner_id)
+  def self.get_summoner(summoner_id)
     league_rank = JSON.parse(get(create_request("lol/league/v3/positions/by-summoner/#{summoner_id}")))
                       .select { |x| x['queueType'] == 'RANKED_SOLO_5x5' }
                       .first
@@ -45,7 +46,7 @@ module Utils
     )
   end
 
-  def get_ranked_match(summoner)
+  def self.get_ranked_match(summoner)
     matchlist = []
     match_history = JSON.parse(get(create_request("/lol/match/v3/matchlists/by-account/#{summoner.account_id}", ['queue=420'])))["matches"]
       .each do |m|
