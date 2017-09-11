@@ -10,6 +10,5 @@ class Match
       options[:summoners]
       .map { |e| [e['player']['summonerId'], e['player']['accountId']] }
       .map { |summoner_id, account_id| Utils.get_summoner(summoner_id, account_id) }
-
   end
 end

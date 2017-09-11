@@ -21,7 +21,7 @@ module Utils
   end
 
   def self.get_tier_level(tier)
-    %w(
+    %w[
       BRONZE
       SILVER
       GOLD
@@ -29,23 +29,23 @@ module Utils
       DIAMOND
       MASTER
       CHALLENGER
-    ).index(tier.upcase)
+    ].index(tier.upcase)
   end
 
   def self.get_rank_level(rank)
-    %w(
+    %w[
       I
       II
       III
       IV
       V
-    ).index(rank.upcase) + 1
+    ].index(rank.upcase) + 1
   end
 
   def self.get_summoner(summoner_id, account_id = nil)
     league_rank = get(create_request("lol/league/v3/positions/by-summoner/#{summoner_id}"))
-                      .select { |x| x['queueType'] == 'RANKED_SOLO_5x5' }
-                      .first
+                  .select { |x| x['queueType'] == 'RANKED_SOLO_5x5' }
+                  .first
     nil unless league_rank
     Summoner.new(
       summoner_id: summoner_id,
@@ -59,14 +59,14 @@ module Utils
 
   def self.get_ranked_match(summoner)
     matchlist = []
-    match_history = get(create_request("/lol/match/v3/matchlists/by-account/#{summoner.account_id}", ['queue=420']))["matches"]
-      .each do |m|
-          match = get(create_request("/lol/match/v3/matches/#{m['gameId']}"))
-          matchlist << Match.new(
-            game_id: match['gameId'],
-            game_version: match['gameVersion'],
-            summoners: match['participantIdentities']
-          )
-      end
+    match_history = get(create_request("/lol/match/v3/matchlists/by-account/#{summoner.account_id}", ['queue=420']))['matches']
+                    .each do |m|
+      match = get(create_request("/lol/match/v3/matches/#{m['gameId']}"))
+      matchlist << Match.new(
+        game_id: match['gameId'],
+        game_version: match['gameVersion'],
+        summoners: match['participantIdentities']
+      )
+    end
   end
 end
