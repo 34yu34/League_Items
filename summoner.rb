@@ -1,7 +1,7 @@
 require_relative 'utils'
 
 class Summoner
-  attr_accessor :summoner_id,:account_id, :name, :tier, :dision, :league_points
+  attr_accessor :summoner_id, :account_id, :name, :tier, :division, :league_points
 
   def initialize(options)
     @summoner_id = options[:summoner_id]

@@ -1,4 +1,4 @@
-require 'net/http'
+require 'http'
 require 'json'
 require 'irb'
 require 'byebug'
