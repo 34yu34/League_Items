@@ -11,7 +11,7 @@ module Utils
 
   def self.get(uri)
     result = HTTP.get(uri)
-    return result.to_s if result.status.success?
+    return JSON.parse(result.to_s) if result.status.success?
     case result.status.code
     when 429
       byebug
@@ -44,7 +44,7 @@ module Utils
     league_rank = get(create_request("lol/league/v3/positions/by-summoner/#{summoner_id}"))
                   .select { |x| x['queueType'] == 'RANKED_SOLO_5x5' }
                   .first
-    nil unless league_rank
+    return nil unless league_rank
     Summoner.new(
       summoner_id: summoner_id,
       account_id: account_id,
@@ -57,15 +57,14 @@ module Utils
 
   def self.get_ranked_match(summoner)
     matchlist = []
-    get(create_request("/lol/match/v3/matchlists/by-account/#{summoner.account_id}", ['queue=420']))['matches']
+    get(create_request("lol/match/v3/matchlists/by-account/#{summoner.account_id}", ['queue=420']))['matches']
                     .each do |m|
-      match = get(create_request("/lol/match/v3/matches/#{m['gameId']}"))
+      match = get(create_request("lol/match/v3/matches/#{m['gameId']}"))
       matchlist << Match.new(
         game_id: match['gameId'],
         game_version: match['gameVersion'],
         summoners: match['participantIdentities']
       )
-
       matchlist
     end
   end

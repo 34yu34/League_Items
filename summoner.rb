@@ -16,7 +16,7 @@ class Summoner
     unless @account_id
       @account_id =
         Utils.get(
-          Utils.create_request("/lol/summoner/v3/summoners/#{@summoner_id}")
+          Utils.create_request("lol/summoner/v3/summoners/#{@summoner_id}")
         )['accountId']
     end
 
