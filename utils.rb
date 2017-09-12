@@ -1,6 +1,8 @@
 require_relative 'summoner'
 require_relative 'match'
 
+require 'http'
+
 module Utils
   def self.create_request(request, params = [])
     params << "api_key=#{KEY}"
@@ -8,16 +10,12 @@ module Utils
   end
 
   def self.get(uri)
-    result = JSON.parse(Net::HTTP.get(uri))
-    # TODO: Rework this function
-    while Hash === result && result['status']
-      puts 'Request did not work.'
-      puts result
-      sleep(1)
-      result = JSON.parse(Net::HTTP.get(uri))
+    result = HTTP.get(uri)
+    return result.to_s if result.status.success?
+    case result.status.code
+    when 429
+      byebug
     end
-
-    result
   end
 
   def self.get_tier_level(tier)
@@ -59,7 +57,7 @@ module Utils
 
   def self.get_ranked_match(summoner)
     matchlist = []
-    match_history = get(create_request("/lol/match/v3/matchlists/by-account/#{summoner.account_id}", ['queue=420']))['matches']
+    get(create_request("/lol/match/v3/matchlists/by-account/#{summoner.account_id}", ['queue=420']))['matches']
                     .each do |m|
       match = get(create_request("/lol/match/v3/matches/#{m['gameId']}"))
       matchlist << Match.new(
@@ -67,6 +65,8 @@ module Utils
         game_version: match['gameVersion'],
         summoners: match['participantIdentities']
       )
+
+      matchlist
     end
   end
 end
