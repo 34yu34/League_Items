@@ -76,4 +76,10 @@ module Utils
       end
     matchlist
   end
+
+  def self.rank_summoners(matchlist)
+    matchlist.map(&:summoners)
+             .flatten
+             .sort
+  end
 end
