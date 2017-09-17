@@ -1,6 +1,8 @@
+require 'hashable'
 require_relative 'utils'
 
 class Summoner
+  include Hashable
   attr_accessor :summoner_id, :account_id, :name, :tier, :division, :league_points
 
   def initialize(options)
