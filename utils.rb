@@ -10,11 +10,19 @@ module Utils
   end
 
   def self.get(uri)
+    print '.'
     result = HTTP.get(uri)
     return JSON.parse(result.to_s) if result.status.success?
     case result.status.code
     when 429
-      byebug
+      time = result.headers['Retry-After'].to_i
+      puts "Waiting #{time}s for request rate to reset"
+      sleep(time)
+      return get(uri)
+    when 403
+      puts 'Forbidden; Did your application key expire?'
+    else
+      puts "#{result.status.code}"
     end
   end
 
@@ -58,14 +66,14 @@ module Utils
   def self.get_ranked_match(summoner)
     matchlist = []
     get(create_request("lol/match/v3/matchlists/by-account/#{summoner.account_id}", ['queue=420']))['matches']
-                    .each do |m|
-      match = get(create_request("lol/match/v3/matches/#{m['gameId']}"))
-      matchlist << Match.new(
-        game_id: match['gameId'],
-        game_version: match['gameVersion'],
-        summoners: match['participantIdentities']
-      )
-      matchlist
-    end
+      .each do |m|
+        match = get(create_request("lol/match/v3/matches/#{m['gameId']}"))
+        matchlist << Match.new(
+          game_id: match['gameId'],
+          game_version: match['gameVersion'],
+          summoners: match['participantIdentities']
+        )
+      end
+    matchlist
   end
 end
