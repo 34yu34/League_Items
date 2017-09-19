@@ -22,12 +22,12 @@ module Utils
     when 403
       puts 'Forbidden; Did your application key expire?'
     else
-      puts "#{result.status.code}"
+      puts result.status.code.to_s
     end
   end
 
   def self.get_tier_level(tier)
-    %w[
+    %w(
       BRONZE
       SILVER
       GOLD
@@ -35,17 +35,17 @@ module Utils
       DIAMOND
       MASTER
       CHALLENGER
-    ].index(tier.upcase)
+    ).index(tier.upcase)
   end
 
   def self.get_rank_level(rank)
-    %w[
+    %w(
       I
       II
       III
       IV
       V
-    ].index(rank.upcase) + 1
+    ).index(rank.upcase) + 1
   end
 
   def self.get_summoner(summoner_id, account_id = nil)
@@ -81,5 +81,11 @@ module Utils
     matchlist.map(&:summoners)
              .flatten
              .sort
+  end
+
+  def self.read_summoners
+    file.open('summoners.json', 'r').each do |ligne|
+      JSON.parse(ligne).map { |summoner| summoners.new(summoner) }
+    end
   end
 end
