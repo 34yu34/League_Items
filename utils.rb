@@ -88,11 +88,20 @@ module Utils
 
   def self.write_summoners(summoners_list)
     summoners_list = (read_summoners + summoners_list)
-                     .uniq(&:summoner_id)
-                     .select { |summoner| summoner.tier > 2 }
-                     .sort
-                     .to_dh
-                     .to_json
+                     .sort do |sum1, sum2|
+                        if sum1.creation_time > sum2.creation_time
+                          1
+                        elsif sum1.creation_time < sum2.creation_time
+                          -1
+                        else
+                          0
+                        end
+                     end
+    summoners_list = summoners_list.uniq(&:summoner_id)
+                                   .select { |summoner| summoner.tier > 2 }
+                                   .sort
+                                   .to_dh
+                                   .to_json
     File.open('summoners.json', 'w') { |f| f << summoners_list }
   end
 

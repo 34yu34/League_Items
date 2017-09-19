@@ -3,7 +3,8 @@ require_relative 'utils'
 
 class Summoner
   include Hashable
-  attr_accessor :summoner_id, :account_id, :name, :tier, :division, :league_points
+  attr_accessor :summoner_id, :account_id, :name, :tier, :division,
+                :league_points, :creation_time
 
   def initialize(options)
     @summoner_id = options[:summoner_id]
@@ -12,6 +13,7 @@ class Summoner
     @tier = Utils.get_tier_level(options[:tier])
     @division = Utils.get_rank_level(options[:division])
     @league_points = options[:lp]
+    @creation_time = Time.now
   end
 
   def account_id
