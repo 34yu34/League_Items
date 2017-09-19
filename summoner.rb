@@ -19,7 +19,7 @@ class Summoner
       @account_id =
         Utils.get(
           Utils.create_request("lol/summoner/v3/summoners/#{@summoner_id}")
-        )['accountId']
+        ).value['accountId']
     end
 
     @account_id

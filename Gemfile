@@ -1,5 +1,6 @@
 source 'https://rubygems.org'
 
+gem 'concurrent', require: 'concurrent'
 gem 'hashable', '~> 0.1.2'
 gem 'http', '~> 2.2'
 gem 'json', '~> 2.1'

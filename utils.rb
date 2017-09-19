@@ -2,6 +2,7 @@ require_relative 'summoner'
 require_relative 'match'
 
 require 'http'
+require 'concurrent'
 
 module Utils
   def self.create_request(request, params = [])
@@ -10,20 +11,22 @@ module Utils
   end
 
   def self.get(uri)
-    print '.'
-    result = HTTP.get(uri)
-    return JSON.parse(result.to_s) if result.status.success?
-    case result.status.code
-    when 429
-      time = result.headers['Retry-After'].to_i
-      puts "Waiting #{time}s for request rate to reset"
-      sleep(time)
-      return get(uri)
-    when 403
-      puts 'Forbidden; Did your application key expire?'
-    else
-      puts "#{result.status.code}"
-    end
+    Concurrent::Promise.new do
+      print '.' # Only to passively show the progress
+      result = HTTP.get(uri)
+      until result.status.success?
+        case result.status.code
+        when 429
+          sleep(result.headers['Retry-After'].to_i)
+          result = HTTP.get(uri)
+        when 403
+          raise StandardError, 'Forbidden; Did your application key expire?'
+        else
+          raise StandardError, result.status.to_s
+        end
+      end
+      JSON.parse(result.to_s)
+    end.execute
   end
 
   def self.get_tier_level(tier)
@@ -50,8 +53,8 @@ module Utils
 
   def self.get_summoner(summoner_id, account_id = nil)
     league_rank = get(create_request("lol/league/v3/positions/by-summoner/#{summoner_id}"))
-                  .select { |x| x['queueType'] == 'RANKED_SOLO_5x5' }
-                  .first
+                  .value
+                  &.find { |x| x['queueType'] == 'RANKED_SOLO_5x5' }
     return nil unless league_rank
     Summoner.new(
       summoner_id: summoner_id,
@@ -65,9 +68,10 @@ module Utils
 
   def self.get_ranked_match(summoner)
     matchlist = []
-    get(create_request("lol/match/v3/matchlists/by-account/#{summoner.account_id}", ['queue=420']))['matches']
-      .each do |m|
-        match = get(create_request("lol/match/v3/matches/#{m['gameId']}"))
+    get(create_request("lol/match/v3/matchlists/by-account/#{summoner.account_id}", ['queue=420']))
+      .value['matches']&.each do |m|
+        match = get(create_request("lol/match/v3/matches/#{m['gameId']}")).value
+        next if match.nil?
         matchlist << Match.new(
           game_id: match['gameId'],
           game_version: match['gameVersion'],
