@@ -27,6 +27,7 @@ module Utils
   end
 
   def self.get_tier_level(tier)
+    return tier if tier.is_a?(Integer)
     %w(
       BRONZE
       SILVER
@@ -39,6 +40,7 @@ module Utils
   end
 
   def self.get_rank_level(rank)
+    return rank if rank.is_a?(Integer)
     %w(
       I
       II
@@ -84,8 +86,10 @@ module Utils
   end
 
   def self.read_summoners
-    file.open('summoners.json', 'r').each do |ligne|
-      JSON.parse(ligne).map { |summoner| summoners.new(summoner) }
+    File.open('summoners.json', 'r') do |file|
+      return JSON.parse(file.readline)
+                 .map { |summoner| summoner.inject({}) { |memo, (key, value)| memo[key.to_sym] = value; memo } }
+                 .map { |summoner| Summoner.new(summoner) }
     end
   end
 end
