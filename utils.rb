@@ -42,12 +42,12 @@ module Utils
   def self.get_rank_level(rank)
     return rank if rank.is_a?(Integer)
     %w(
-      I
-      II
-      III
-      IV
       V
-    ).index(rank.upcase) + 1
+      IV
+      III
+      II
+      I
+    ).index(rank.upcase)
   end
 
   def self.get_summoner(summoner_id, account_id = nil)
@@ -83,6 +83,17 @@ module Utils
     matchlist.map(&:summoners)
              .flatten
              .sort
+  end
+
+
+  def self.write_summoners(summoners_list)
+    summoners_list = (read_summoners + summoners_list)
+                     .uniq(&:summoner_id)
+                     .select { |summoner| summoner.tier > 2 }
+                     .sort
+                     .to_dh
+                     .to_json
+    File.open('summoners.json', 'w') { |f| f << summoners_list }
   end
 
   def self.read_summoners

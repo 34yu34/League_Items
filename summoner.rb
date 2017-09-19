@@ -27,10 +27,10 @@ class Summoner
 
   def <=>(other)
     if @tier == other.tier
-      if @division == other.rank
+      if @division == other.division
         @league_points <=> other.league_points
       else
-        @rank <=> other.rank
+        @division <=> other.division
       end
     else
       @tier <=> other.tier
