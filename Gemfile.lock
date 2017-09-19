@@ -6,6 +6,7 @@ GEM
     byebug (9.1.0)
     domain_name (0.5.20170404)
       unf (>= 0.0.5, < 1.0.0)
+    hashable (0.1.2)
     http (2.2.2)
       addressable (~> 2.3)
       http-cookie (~> 1.0)
@@ -26,6 +27,7 @@ PLATFORMS
 
 DEPENDENCIES
   byebug (~> 9.1)
+  hashable (~> 0.1.2)
   http (~> 2.2)
   json (~> 2.1)
 
