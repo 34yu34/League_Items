@@ -93,11 +93,16 @@ module Utils
                   .sort
   end
 
-  def self.write_summoners(summoners_list)
+  def self.update_summoners
+    summoners_list = read_summoners
+    summoners_list.map { |sum| get_summoner(sum.summoner_id, account_id) }
+    write_summoners(summoners_list)
+  end
 
-    summoners_list = sort_summoners(summoners_list + read_summoners)
-                     .to_dh
-                     .to_json
+  def self.write_summoners(summoners_list)
+    File.rename('summoners.json', 'summoners.json.bak')
+    summoners_list.to_dh
+                  .to_json
     File.open('summoners.json', 'w') { |f| f << summoners_list }
   end
 
