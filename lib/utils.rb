@@ -103,14 +103,14 @@ module Utils
   end
 
   def self.write_summoners(summoners_list)
-    File.rename('../db/summoners.json', '../db/summoners.json.bak')
+    File.rename('db/summoners.json', 'db/summoners.json.bak')
     summoners_list.to_dh
                   .to_json
-    File.open('../db/summoners.json', 'w') { |f| f << summoners_list }
+    File.open('db/summoners.json', 'w') { |f| f << summoners_list }
   end
 
   def self.read_summoners
-    File.open('../db/summoners.json', 'r') do |file|
+    File.open('db/summoners.json', 'r') do |file|
       return JSON.parse(file.readline)
                  .map { |summoner| summoner.inject({}) { |memo, (key, value)| memo[key.to_sym] = value; memo } }
                  .map { |summoner| Summoner.new(summoner) }
