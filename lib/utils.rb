@@ -98,7 +98,7 @@ module Utils
   end
 
   def self.update_summoners(summoners_list = [])
-    summoners_list += read_summoners.map { |sum| get_summoner(sum.summoner_id, account_id) }
+    summoners_list += read_summoners.map { |sum| get_summoner(sum.summoner_id, sum.account_id) }
     write_summoners(sort_summoners(summoners_list))
   end
 

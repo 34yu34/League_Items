@@ -7,7 +7,7 @@ require_relative 'lib/summoner'
 require_relative 'lib/match'
 require_relative 'lib/utils'
 
-KEY = 'YOUR_KEY_HERE'.freeze
+KEY = File.open('secret.txt').readline.strip
 
 a = Utils.read_summoners
 
