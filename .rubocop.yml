@@ -17,9 +17,7 @@ Style/Documentation:
   Exclude:
     - 'spec/**/*'
     - 'test/**/*'
-    - 'match.rb'
-    - 'utils.rb'
-    - 'summoner.rb'
+    - 'lib/*.rb'
 
 # Offense count: 1
 # Cop supports --auto-correct.
