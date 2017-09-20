@@ -4,6 +4,7 @@ GEM
     addressable (2.5.2)
       public_suffix (>= 2.0.2, < 4.0)
     byebug (9.1.0)
+    concurrent-ruby (1.0.5)
     domain_name (0.5.20170404)
       unf (>= 0.0.5, < 1.0.0)
     hashable (0.1.2)
@@ -27,6 +28,7 @@ PLATFORMS
 
 DEPENDENCIES
   byebug (~> 9.1)
+  concurrent-ruby
   hashable (~> 0.1.2)
   http (~> 2.2)
   json (~> 2.1)
